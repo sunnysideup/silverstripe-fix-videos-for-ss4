@@ -1,4 +1,4 @@
-# silverstripe-fix-videos-for-ss4
+# silverstripe Fix Videos for SS4
 Fixes embedded videos in SS3 to the new format in SS4
 
 
