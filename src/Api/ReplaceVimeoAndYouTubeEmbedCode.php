@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunnysideup\FixVideosForSS4;
+namespace Sunnysideup\FixVideosForSS4\Api;
 
 use DOMDocument;
 
