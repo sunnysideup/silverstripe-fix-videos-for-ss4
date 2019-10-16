@@ -10,7 +10,7 @@ use DOMDocument;
 class ReplaceVimeoAndYouTubeEmbedCode
 {
 
-    protected $prefixHTML = '<html><body>';
+    protected $prefixHTML = '<html><head><meta http-equiv="Content-type" content="text/html; charset=UTF-8"></head><body>';
 
     protected $postfixHTML = '</body></html>';
 
@@ -19,12 +19,18 @@ class ReplaceVimeoAndYouTubeEmbedCode
      * @param  string       $oldHTML
      * @return string|null  returns null if there is no change!
      */
-    public function oldToNewHTML(string $oldHTML) : ?string
+    public function oldToNewHTML(string $oldHTML) : ? string
     {
         $change = false;
+        $oldHTML = $this->prefixHTML.$oldHTML.$this->postfixHTML;
         $dom = new DOMDocument();
+        $oldHTML = mb_convert_encoding(
+             $oldHTML,
+            'HTML-ENTITIES',
+            'UTF-8'
+        );
         $dom->loadHTML(
-            $this->prefixHTML.$oldHTML.$this->postfixHTML,
+            $oldHTML,
             LIBXML_HTML_NOIMPLIED|LIBXML_HTML_NODEFDTD
         );
         foreach ($dom->getElementsByTagName('p') as $pTag) {
@@ -50,19 +56,24 @@ class ReplaceVimeoAndYouTubeEmbedCode
             }
         }
         if($change) {
-            $html = $dom->saveXML();
+            $html = $dom->saveHTML();
             $html = $this->cleanHTML($html);
-
-            return $html;
+            return ''.trim($html);
         } else {
-            null;
+            return null;
         }
     }
 
 
+
     protected function newYouTubeCode($videoID)
     {
-        return '<div thumbnail="https://i.ytimg.com/vi/'.$videoID.'/hqdefault.jpg" class="ss-htmleditorfield-file embed"><iframe src="https://www.youtube.com/embed/'.$videoID.'?feature=oembed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>';
+        return '<div thumbnail="https://i.ytimg.com/vi/'.$videoID.'/hqdefault.jpg" class="youtubevideo ss-htmleditorfield-file embed"><iframe src="https://www.youtube.com/embed/'.$videoID.'?feature=oembed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>';
+    }
+
+    protected function newVimeoCode($videoID)
+    {
+        return '<div class="leftAlone ss-htmleditorfield-file embed vimeovideo"><iframe src="https://player.vimeo.com/video/'.$videoID.'" frameborder="0" allow="autoplay; fullscreen" allowfullscreen=""></iframe></div>';
     }
 
 
@@ -76,7 +87,7 @@ class ReplaceVimeoAndYouTubeEmbedCode
             $html = str_replace('<?xml version="1.0" standalone="yes"?>', '', $html);
             //remove white space
             $html = preg_replace('/\s+/', ' ', $html);
-            $html = str_replace('> <', '><', $html);
+            // $html = str_replace('> <', '><', $html);
         }
 
         return $html;
