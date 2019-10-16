@@ -14,6 +14,8 @@ use SilverStripe\ORM\DataObject;
 class ReplaceVimeoAndYouTubeEmbedCodeTask extends BuildTask
 {
 
+    protected $forReal = false;
+
     protected $title = 'Fix legacy YouTube and Vimeo';
 
     protected $description = 'Runs through all the HTMLText fields.';
@@ -45,9 +47,13 @@ class ReplaceVimeoAndYouTubeEmbedCodeTask extends BuildTask
                                     echo 'FROM: ' . $htmlNew;
                                     DB::alteration_message('-----------------------------');
                                     $object->$fieldName = $htmlNew;
-                                    $object->write();
+                                    if($this->forReal) {
+                                        $object->write();
+                                    }
                                     if($isPublished) {
-                                        $object->publishRecursive();
+                                        if($this->forReal) {
+                                            $object->publishRecursive();
+                                        }
                                     }
                                 }
                             }
