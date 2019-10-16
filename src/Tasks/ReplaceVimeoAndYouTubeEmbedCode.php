@@ -3,6 +3,10 @@
 namespace Sunnysideup\FixVideosForSS4\Tasks;
 
 use DOMDocument;
+use SilverStripe\Dev\BuildTask;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataObject;
 
 
 
@@ -52,10 +56,6 @@ class ReplaceVimeoAndYouTubeEmbedCodeTask extends BuildTask
                 }
             }
         }
-        // $stage = isset($params['OnLive']) ? Versioned::LIVE : Versioned::DRAFT;
-        // return Versioned::get_by_stage(SiteTree::class, $stage, ['ID' => $idList]);
-
-        return SiteTree::get()->filter(['ID' => $idList]);
     }
 
 }
