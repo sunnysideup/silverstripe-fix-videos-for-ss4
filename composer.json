@@ -1,5 +1,5 @@
 {
-    "name": "sunnysideup/fixvideosforss4",
+    "name": "sunnysideup/fix-videos-for-ss4",
     "type": "silverstripe-vendormodule",
     "description": "Fix videos when moving them from SS3 to SS4",
     "keywords": [
